@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Be My Valentine</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Better, modern font for readability */
+            background: linear-gradient(135deg, #ffb6c1, #ffe4e1, #f8c8dc); /* Pastel pink gradient */
+            color: #333;
+            text-align: center;
+            margin: 0;
+            padding: 20px; /* Added padding for better layout */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.5s;
+            overflow: hidden; /* Hide overflow for floating elements */
+        }
+        .floating-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: float 6s linear infinite;
+            opacity: 0.7;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+        .container {
+            width: 90vw; /* Slightly smaller for better layout */
+            max-width: 600px;
+            height: auto; /* Auto height for better fit */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background for readability */
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .penguin {
+            width: 120px; /* Slightly smaller for layout */
+            height: auto;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        .message {
+            font-size: 1.5em; /* Adjusted for readability */
+            line-height: 1.6;
+            margin: 20px 0;
+            transition: all 0.5s;
+            color: #e91e63; /* Pink text */
+        }
+        .hearts {
+            font-size: 2em;
+            margin: 20px 0;
+            display: none;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative; /* For overlapping */
+        }
+        button {
+            background: linear-gradient(45deg, #ff69b4, #ffb6c1); /* Gradient pink */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-family: inherit;
+            position: relative;
+        }
+        button:hover {
+            background: linear-gradient(45deg, #e91e63, #ff4081);
+            transform: scale(1.05);
+        }
+        button:active {
+            transform: scale(0.95);
+        }
+        .next { background: linear-gradient(45deg, #87ceeb, #add8e6); } /* Light blue */
+        .next:hover { background: linear-gradient(45deg, #4682b4, #5f9ea0); }
+        .yes {
+            background: linear-gradient(45deg, #32cd32, #90ee90); /* Green gradient */
+            padding: 20px 40px;
+            font-size: 1.5em;
+            transform: scale(1); /* Initial scale */
+            transition: transform 0.3s ease;
+            z-index: 1; /* Start below No */
+        }
+        .yes:hover { background: linear-gradient(45deg, #228b22, #6b8e23); }
+        .no {
+            background: linear-gradient(45deg, #ff6347, #ffa07a); /* Coral gradient */
+            padding: 10px 20px;
+            font-size: 1em;
+            z-index: 2; /* Above Yes initially */
+        }
+        .no:hover { background: linear-gradient(45deg, #dc143c, #b22222); }
+        .fill-screen {
+            position: fixed; /* Fixed for better screen coverage */
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #ffb6c1, #ffe4e1, #f8c8dc); /* Pink gradient background */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            animation: fill 1s ease-in-out;
+            overflow: hidden; /* Hide overflow for floating elements */
+        }
+        .text-container {
+            background: white; /* White container for text */
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 80vw;
+            text-align: center;
+            z-index: 12; /* Above hearts */
+        }
+        .text-container div {
+            color: black; /* Black text */
+            font-size: 2.5em; /* Slightly smaller for container */
+            line-height: 1.4;
+            margin: 10px 0;
+        }
+        .fill-hearts {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 11; /* Above background, below text container */
+        }
+        .fill-heart {
+            position: absolute;
+            font-size: 1.5em; /* Smaller hearts for cuteness */
+            animation: floatFill 8s linear infinite;
+            opacity: 0.8;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Subtle black glow for contrast */
+        }
+        @keyframes floatFill {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-10vh) rotate(360deg); }
+        }
+        @keyframes fill {
+            from { transform: scale(0); }
+            to { transform: scale(1); }
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class="floating-hearts">
+        <div class="heart" style="left: 10%; animation-delay: 0s;">💖</div>
+        <div class="heart" style="left: 20%; animation-delay: 1s;">❤️</div>
+        <div class="heart" style="left: 30%; animation-delay: 2s;">💕</div>
+        <div class="heart" style="left: 40%; animation-delay: 3s;">💞</div>
+        <div class="heart" style="left: 50%; animation-delay: 4s;">✨</div>
+        <div class="heart" style="left: 60%; animation-delay: 5s;">💖</div>
+        <div class="heart" style="left: 70%; animation-delay: 6s;">❤️</div>
+        <div class="heart" style="left: 80%; animation-delay: 7s;">💕</div>
+        <div class="heart" style="left: 90%; animation-delay: 8s;">✨</div>
+    </div>
+    <div class="container">
+        <img src="penguin.png" alt="Cute Blue Penguin" class="penguin">
+        <div class="message" id="message">Hi love love <img src="penguin.png" alt="Cute Blue Penguin" style="width: 40px; vertical-align: middle; margin: 0 5px;">,</div>
+        <div class="hearts" id="hearts">❤️💕💖💞✨</div>
+        <div class="buttons">
+            <button class="next" id="nextBtn" onclick="nextPage()">hello ✨</button>
+            <div class="hidden" id="finalButtons">
+                <button class="yes" id="yesBtn" onclick="yesClicked()">Yes! 💖</button>
+                <button class="no" onclick="noClicked()">No thanks 😢</button>
+            </div>
+        </div>
+        <div class="fill-screen hidden" id="yesScreen">
+            <div class="fill-hearts">
+                <div class="fill-heart" style="left: 5%; animation-delay: 0s;">💖</div>
+                <div class="fill-heart" style="left: 15%; animation-delay: 1s;">❤️</div>
+                <div class="fill-heart" style="left: 25%; animation-delay: 2s;">💕</div>
+                <div class="fill-heart" style="left: 35%; animation-delay: 3s;">💞</div>
+                <div class="fill-heart" style="left: 45%; animation-delay: 4s;">✨</div>
+                <div class="fill-heart" style="left: 55%; animation-delay: 5s;">💖</div>
+                <div class="fill-heart" style="left: 65%; animation-delay: 6s;">❤️</div>
+                <div class="fill-heart" style="left: 75%; animation-delay: 7s;">💕</div>
+                <div class="fill-heart" style="left: 85%; animation-delay: 8s;">💞</div>
+                <div class="fill-heart" style="left: 95%; animation-delay: 9s;">✨</div>
+                <div class="fill-heart" style="left: 10%; animation-delay: 10s;">💖</div>
+                <div class="fill-heart" style="left: 20%; animation-delay: 11s;">❤️</div>
+                <div class="fill-heart" style="left: 30%; animation-delay: 12s;">💕</div>
+                <div class="fill-heart" style="left: 40%; animation-delay: 13s;">💞</div>
+                <div class="fill-heart" style="left: 50%; animation-delay: 14s;">✨</div>
+                <div class="fill-heart" style="left: 60%; animation-delay: 15s;">💖</div>
+                <div class="fill-heart" style="left: 70%; animation-delay: 16s;">❤️</div>
+                <div class="fill-heart" style="left: 80%; animation-delay: 17s;">💕</div>
+                <div class="fill-heart" style="left: 90%; animation-delay: 18s;">💞</div>
+                <div class="fill-heart" style="left: 0%; animation-delay: 19s;">✨</div>
+            </div>
+            <div class="text-container">
+                <div>Yeyyy, I love youuuu!</div>
+                <div>😚😚😚</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const messageParts = [
+            "Hi love love <img src='penguin.png' alt='Cute Blue Penguin' style='width: 40px; vertical-align: middle; margin: 0 5px;'>,",
+            "Hi love love <img src='penguin.png' alt='Cute Blue Penguin' style='width: 40px; vertical-align: middle; margin: 0 5px;'>, I know that you're too busy lalo na sa order,",
+            "Hi love love <img src='penguin.png' alt='Cute Blue Penguin' style='width: 40px; vertical-align: middle; margin: 0 5px;'>, I know that you're too busy lalo na sa order, but for today and tom, can I have you time :>>,",
+            "Hi love love <img src='penguin.png' alt='Cute Blue Penguin' style='width: 40px; vertical-align: middle; margin: 0 5px;'>, I know that you're too busy lalo na sa order, but for today and tom, can I have you time :>>, tho I don't have much for tom,",
+            "Hi love love <img src='penguin.png' alt='Cute Blue Penguin' style='width: 40px; vertical-align: middle; margin: 0 5px;'>, I know that you're too busy lalo na sa order, but for today and tom, can I have you time :>>, tho I don't have much for tom, may I have a 2 part celeb with you :>>"
+        ];
+        const buttonLabels = [
+            "hello ✨",
+            "sa truuu 💕",
+            "yes? ❤️",
+            "tapos😤",
+            "👀"
+        ];
+        let currentPage = 0;
+        let yesScale = 1;
+
+        function nextPage() {
+            currentPage++;
+            if (currentPage < messageParts.length) {
+                document.getElementById('message').innerHTML = messageParts[currentPage];
+                document.getElementById('nextBtn').innerHTML = buttonLabels[currentPage];
+            } else {
+                // Show hearts and final yes/no buttons
+                document.getElementById('hearts').style.display = 'block';
+                document.getElementById('nextBtn').classList.add('hidden');
+                document.getElementById('finalButtons').classList.remove('hidden');
+            }
+        }
+
+        function yesClicked() {
+            document.getElementById('yesScreen').classList.remove('hidden');
+        }
+
+        function noClicked() {
+            yesScale += 0.2; // Increase scale on each No click
+            document.getElementById('yesBtn').style.transform = `scale(${yesScale})`;
+            document.getElementById('yesBtn').style.zIndex = '3'; // Bring Yes above No
+        }
+    </script>
+</body>
+</html>
